@@ -26,9 +26,26 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_tries == 0) {
-      context.go('/defeat');
+    showSnackBar(
+      String title,
+      String message,
+      ContentType contentType,
+    ) {
+      final snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: title,
+          message: message,
+          contentType: contentType,
+        ),
+      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
     }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Devine le nombre"),
@@ -58,44 +75,35 @@ class _GamePageState extends State<GamePage> {
                     onPressed: () {
                       final guessNumber = int.tryParse(myController.text);
                       if (guessNumber == null) {
-                        final snackBar = SnackBar(
-                          elevation: 0,
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.transparent,
-                          content: AwesomeSnackbarContent(
-                            title: 'Erreur',
-                            message: "Veuillez entrer un nombre",
-                            contentType: ContentType.warning,
-                          ),
+                        showSnackBar(
+                          'Erreur',
+                          'Veuillez entrer un nombre',
+                          ContentType.warning,
                         );
-                        ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(snackBar);
+                        return;
+                      }
+                      if (guessNumber < 1 || guessNumber > 100) {
+                        showSnackBar(
+                          'Erreur',
+                          'Le nombre doit être compris entre 1 et 100',
+                          ContentType.warning,
+                        );
                         return;
                       }
                       if (guessNumber == numberToGuess) {
                         context.go('/victory');
                         return;
                       }
-                      final snackBar = SnackBar(
-                        elevation: 0,
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: Colors.transparent,
-                        content: AwesomeSnackbarContent(
-                          title: 'Loupé !',
-                          message: (() {
-                            if (guessNumber > numberToGuess) {
-                              return "Le nombre est plus petit";
-                            } else {
-                              return "Le nombre est plus grand";
-                            }
-                          })(),
-                          contentType: ContentType.failure,
-                        ),
+                      showSnackBar(
+                        'Loupé !',
+                        guessNumber > numberToGuess
+                            ? 'Le nombre est plus petit'
+                            : 'Le nombre est plus grand',
+                        ContentType.failure,
                       );
-                      ScaffoldMessenger.of(context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(snackBar);
+                      if (_tries == 1) {
+                        context.go('/defeat');
+                      }
                       setState(() {
                         --_tries;
                       });
