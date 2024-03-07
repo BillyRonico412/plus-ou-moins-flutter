@@ -7,6 +7,6 @@ class VictoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const FinalPage(
-        message: "Vous n'avez pas trouvé le bon nombre", title: "Défaite");
+        message: "Vous avez trouvé le bon nombre", title: "Victoire");
   }
 }

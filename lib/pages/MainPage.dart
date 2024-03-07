@@ -15,7 +15,7 @@ class MainPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Center(
-              child: Text("Billy Ronico",
+              child: Text("Plus ou moins ?",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
